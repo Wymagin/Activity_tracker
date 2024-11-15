@@ -1,0 +1,24 @@
+# Django-specific
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+ 
+# Environment variables
+.env
+
+# VSCode settings
+.vscode/
+
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+
+# Docker-related
+*.log
+*.pot
+*.sqlite3
+*.swp
+
+# IDE-specific
+*.idea/
+*.sublime*

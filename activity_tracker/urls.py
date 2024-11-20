@@ -23,5 +23,6 @@ app_name = 'activity_tracker'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.base_view, name='base'),
-    path('home/', views.home_view, name='home')
+    path('home/', views.home_view, name='home'),
+    path('register/', views.sign_up, name='register'),
 ]

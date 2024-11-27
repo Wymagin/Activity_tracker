@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     'activity_tracker',
     "crispy_forms",
     "crispy_bootstrap4",
+    "plotly",
+    "pandas",
+    # "django-extensions",
+    # "django-filter",
 ]
 
 MIDDLEWARE = [

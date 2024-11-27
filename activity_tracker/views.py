@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from .forms import UserRegistrationForm, ActivityForm
+from django.utils import timezone
+from django.db.models import Sum, Count
 from .models import Activity
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LoginView
@@ -54,3 +57,29 @@ class login_view(LoginView):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+@login_required
+def dashboard_view(request):
+    # Get today's activities
+    today = timezone.now().date()
+    today_activities = Activity.objects.filter(
+        user=request.user, 
+        start_time__date=today
+    ).order_by('-start_time')
+    
+    # Tag-based statistics
+    tag_stats = Activity.objects.filter(
+        user=request.user, 
+        start_time__date=today
+    ).values('predefined_tag') \
+     .annotate(
+         total_duration=Sum('duration'),
+         activity_count=Count('id')
+     )
+
+    context = {
+        'today_activities': today_activities,
+        'tag_stats': tag_stats,
+    }
+    
+    return render(request, 'activity_tracker/dashboard.html', context)

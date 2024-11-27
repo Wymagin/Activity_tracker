@@ -1,6 +1,7 @@
 {% extends 'activity_tracker/base.html' %}
 
 {% block content %}
+
 <div class="container dashboard">
     <h1>Today's Activities</h1>
 
@@ -44,6 +45,30 @@
                 {% endfor %}
             </ul>
         </div>
+        <div class="col-md-4">
+            <h2>Tag Statistics</h2>
+            <ul class="list-group">
+                {% for tag_stat in tag_stats %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ tag_stat.predefined_tag }}
+                    <span class="badge bg-primary">
+                        {{ tag_stat.activity_count }} activities
+                    </span>
+                    <span class="badge bg-secondary">
+                        {{ tag_stat.total_duration }}
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+
+        </div>
     </div>
+    <div class="row">
+        <div class="col-12">
+            <h2>Daily Activities</h2>
+            {{ daily_activities_chart|safe }}
+        </div>
+    </div>
+    
 </div>
 {% endblock %}

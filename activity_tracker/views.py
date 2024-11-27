@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.contrib import messages
-
+from .utils import create_daily_activities_chart
 
 def base_view(request):
     return render(request, 'activity_tracker/base.html', {
@@ -32,19 +32,6 @@ def sign_up(request):
         form = UserRegistrationForm()
     return render(request, 'activity_tracker/register.html', {'form': form})
 
-# def login_view(request):
-#     if request.method == 'POST':
-#         username = request.POST['username']
-#         password = request.POST['password']
-#         user = authenticate(request, username=username, password=password)
-        
-#         if user is not None:
-#             auth_login(request, user)
-#             return redirect('dashboard')  # Redirect to dashboard after successful login
-#         else:
-#             messages.error(request, 'Invalid username or password')
-    
-#     return render(request, 'activity_tracker/login.html')
 
 class login_view(LoginView):
     template_name = 'activity_tracker/login.html'
@@ -77,9 +64,12 @@ def dashboard_view(request):
          activity_count=Count('id')
      )
 
+    daily_activities_chart = create_daily_activities_chart(request.user)
+    
     context = {
         'today_activities': today_activities,
         'tag_stats': tag_stats,
+        'daily_activities_chart': daily_activities_chart,
     }
     
     return render(request, 'activity_tracker/dashboard.html', context)

@@ -15,8 +15,10 @@ class UserRegistrationForm(UserCreationForm):
 class ActivityForm(forms.ModelForm):
     class Meta:
         model = Activity
-        fields = ['name', 'description', 'start_time', 'end_time']
+        fields = ['name', 'description', 'start_time', 'end_time','activity_type']
         widgets = {
             'start_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'end_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
+        
+        

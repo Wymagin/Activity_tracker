@@ -21,7 +21,7 @@ class Activity(models.Model):
     end_time = models.DateTimeField(null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
     
-    predefined_tag = models.CharField(
+    activity_type = models.CharField(
         max_length=20, 
         choices=TAGS, 
         default='other'
@@ -53,6 +53,7 @@ class Activity(models.Model):
         indexes = [
             models.Index(fields=['start_time']),
             models.Index(fields=['end_time']),
+            models.Index(fields=['activity_type']),
         ]
 
 

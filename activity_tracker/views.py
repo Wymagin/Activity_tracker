@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .utils import create_daily_activities_chart
+from .utils import create_daily_activities_chart, create_activities_by_type_chart
 
 def base_view(request):
     return render(request, 'activity_tracker/base.html', {
@@ -58,18 +58,53 @@ def dashboard_view(request):
     tag_stats = Activity.objects.filter(
         user=request.user, 
         start_time__date=today
-    ).values('predefined_tag') \
+    ).values('activity_type') \
      .annotate(
          total_duration=Sum('duration'),
          activity_count=Count('id')
      )
 
     daily_activities_chart = create_daily_activities_chart(request.user)
+    activities_by_type_chart = create_activities_by_type_chart(request.user)
+    form = ActivityForm()
     
     context = {
         'today_activities': today_activities,
         'tag_stats': tag_stats,
         'daily_activities_chart': daily_activities_chart,
+        'activities_by_type_chart': activities_by_type_chart,
+        'form': form,
     }
     
     return render(request, 'activity_tracker/dashboard.html', context)
+
+
+# @login_required
+# def add_activity(request):
+#     if request.method == 'POST':
+#         form = ActivityForm(request.POST)
+#         if form.is_valid():
+#             activity = form.save(commit=False)
+#             activity.user = request.user  
+#             activity.save()
+#             messages.success(request, "Activity added successfully!")
+#             return redirect('dashboard') 
+#         else:
+#             messages.error(request, "There was an error in your form. Please fix it and try again.")
+#     else:
+#         form = ActivityForm()
+
+#     return render(request, 'activity_tracker/add_activity.html', {'form': form})
+
+@login_required
+def add_activity(request):
+    if request.method == 'POST':
+        form = ActivityForm(request.POST)
+        if form.is_valid():
+            activity = form.save(commit=False)
+            activity.user = request.user  
+            activity.save()
+            messages.success(request, "Activity added successfully!")
+        else:
+            messages.error(request, "There was an error in your form. Please fix it and try again.")
+    return redirect('dashboard') 

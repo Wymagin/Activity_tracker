@@ -43,3 +43,36 @@ def create_daily_activities_chart(user):
     # Convert to div
     chart_div = opy.plot(fig, output_type='div', include_plotlyjs=True)
     return chart_div
+
+
+def agg_activities_by_type(user):
+    activities_by_type = (
+    Activity.objects.filter(user=user)
+    .values('activity_type')
+    .annotate(activity_count=Count('id'))
+    .order_by('activity_type')
+    )
+    return activities_by_type
+
+
+def create_activities_by_type_chart(user):
+    df = pd.DataFrame(agg_activities_by_type(user))
+
+    # fig = px.bar(
+    #     df,
+    #     x="day",
+    #     y="activity_count",
+    #     color="activity_type",
+    #     title="Activities by Type per Day",
+    #     labels={"day": "Date",
+    #             "activity_count": "Number of Activities",
+    #             "activity_type": "Activity Type"}
+    # )
+    # chart_div = opy.plot(fig, output_type='div', include_plotlyjs=True)
+    fig = px.pie(df,
+                values='activity_count',
+                names='activity_type',
+                title='Activities by Type per Day',
+                labels={'activity_type': 'Activity Type', 'activity_count': 'Number of Activities'},)
+    chart_div = opy.plot(fig, output_type='div', include_plotlyjs=True)
+    return chart_div

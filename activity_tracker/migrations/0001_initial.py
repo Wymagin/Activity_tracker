@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('start_time', models.DateTimeField()),
                 ('end_time', models.DateTimeField(blank=True, null=True)),
                 ('duration', models.DurationField(blank=True, null=True)),
-                ('predefined_tag', models.CharField(choices=[('work', 'Work'), ('hobby', 'Hobby'), ('exercise', 'Exercise'), ('personal', 'Personal'), ('shopping', 'Shopping'), ('learning', 'Learning'), ('other', 'Other')], default='other', max_length=20)),
+                ('activity_type', models.CharField(choices=[('work', 'Work'), ('hobby', 'Hobby'), ('exercise', 'Exercise'), ('personal', 'Personal'), ('shopping', 'Shopping'), ('learning', 'Learning'), ('other', 'Other')], default='other', max_length=20)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
             options={

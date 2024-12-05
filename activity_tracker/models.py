@@ -55,18 +55,3 @@ class Activity(models.Model):
             models.Index(fields=['end_time']),
             models.Index(fields=['activity_type']),
         ]
-
-
-# class UserGoal(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     name = models.CharField(max_length=200)
-#     target_duration = models.IntegerField()  # minutes
-#     frequency = models.CharField(choices=[
-#         ('daily', 'Daily'),
-#         ('weekly', 'Weekly'),
-#         ('monthly', 'Monthly')
-#     ])
-
-# def calculate_goal_progress(goal):
-#     # Logic to calculate goal progress based on goal type
-#     pass

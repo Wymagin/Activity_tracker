@@ -1,0 +1,14 @@
+{% extends 'activity_tracker/base.html' %} 
+{% block content %} 
+
+
+<div class="container mt-4">
+    <h2>Activity Breakdown</h2>
+    <div id="chart-container">
+        {{ chart|safe }}
+    </div>
+</div>
+
+
+
+{% endblock %}

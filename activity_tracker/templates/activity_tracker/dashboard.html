@@ -1,113 +1,86 @@
-{% extends 'activity_tracker/base.html' %}
-{% load crispy_forms_tags %}
-{% block content %}
+{% extends 'activity_tracker/base.html' %} 
+{% load crispy_forms_tags %} 
+{% block content %} 
 {% if messages %}
 <div class="alert-container">
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endfor %}
+  {% for message in messages %}
+  <div
+    class="alert alert-{{ message.tags }} alert-dismissible fade show"
+    role="alert"
+  >
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  {% endfor %}
 </div>
 {% endif %}
 <div class="container dashboard">
-    <h1>Today's Activities</h1>
+  <h1>Today's Activities</h1>
 
-    <div class="row">
-        <div class="col-md-8">
-            <h2>Activity List</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Activity</th>
-                        <th>Tag</th>
-                        <th>Start Time</th>
-                        <th>Duration</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for activity in today_activities %}
-                    <tr>
-                        <td>{{ activity.name }}</td>
-                        <td>{{ activity.get_activity_type_display }}</td>
-                        <td>{{ activity.start_time|time:"H:i" }}</td>
-                        <td>{{ activity.duration }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-  
-        <div class="col-md-4">
-            <h2>Activity Statistics</h2>
-            <ul class="list-group">
-                {% for tag_stat in tag_stats %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ tag_stat.activity_type }}
-                    <span class="badge bg-primary">
-                        {{ tag_stat.activity_count }} activities
-                    </span>
-                    <span class="badge bg-secondary">
-                        {{ tag_stat.total_duration }}
-                    </span>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="col-md-4">
-            <h2>Activity Statistics</h2>
-            <ul class="list-group">
-                {% for tag_stat in tag_stats %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ tag_stat.activity_type }}
-                    <span class="badge bg-primary">
-                        {{ tag_stat.activity_count }} activities
-                    </span>
-                    <span class="badge bg-secondary">
-                        {{ tag_stat.total_duration }}
-                    </span>
-                </li>
-                {% endfor %}
-            </ul>
-
-        </div>
+  <div class="row">
+    <div class="col-md-8">
+      <h2>Activity List</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Activity</th>
+            <th>Tag</th>
+            <th>Start Time</th>
+            <th>Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for activity in today_activities %}
+          <tr>
+            <td>{{ activity.name }}</td>
+            <td>{{ activity.get_activity_type_display }}</td>
+            <td>{{ activity.start_time|time:"H:i" }}</td>
+            <td>{{ activity.duration }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+
+    
+    <div class="col-md-4">
+
+      <h2>Activity Statistics</h2>
+      <ul class="list-group">
+        {% for tag_stat in tag_stats %}
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          {{ tag_stat.activity_type }}
+          <span class="badge bg-primary">
+            {{ tag_stat.activity_count }} activities
+          </span>
+          <span class="badge bg-secondary">
+            {{ tag_stat.total_duration }}
+          </span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
     <div class="col-12">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addActivityModal">
-            Add Activity
-        </button>
-        <div class="modal fade" id="addActivityModal" tabindex="-1" aria-labelledby="addActivityModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addActivityModalLabel">Add New Activity</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="ActivityForm" method="post" action="{% url 'add_activity' %}">
-                            {% csrf_token %}
-                            {{ form|crispy }}
-                            <button type="submit" class="btn btn-primary mt-3">Save Activity</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <h2>Daily Activities</h2>
+      {{ daily_activities_chart|safe }}
     </div>
-    <div class="row">
-        <div class="col-12">
-            <h2>Daily Activities</h2>
-            {{ daily_activities_chart|safe }}
-        </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <h2>Activities By Type</h2>
+      {{ activities_by_type_chart|safe }}
     </div>
-    <div class="row">
-        <div class="col-12">
-            <h2>Activities By Type</h2>
-            {{ activities_by_type_chart|safe }}
-        </div>
-    </div>
+  </div>
 </div>
-
 
 {% endblock %}

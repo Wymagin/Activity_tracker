@@ -29,4 +29,9 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('add-activity/', views.add_activity, name='add_activity'),
     path('dashboard/', views.dashboard_view, name='dashboard'),
+    path('dashboard/day/', views.dashboard_day_view, name='dashboard_day'),
+    path('dashboard/week/', views.dashboard_week_view, name='dashboard_week'),
+    path('dashboard/month/', views.dashboard_month_view, name='dashboard_month'),
 ]
+
+

@@ -10,14 +10,21 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from .utils import create_daily_activities_chart, create_activities_by_type_chart
 
+# def base_view(request):
+#     return render(request, 'activity_tracker/base.html', {
+#         'title': 'Activity Tracker',
+#         'welcome_message': 'Track and Manage Your Activities',
+#     })
+
 def base_view(request):
-    return render(request, 'activity_tracker/base.html', {
-        'title': 'Activity Tracker',
-        'welcome_message': 'Track and Manage Your Activities',
-    })
+    return redirect('home')
     
 def home_view(request):
-    return render(request, 'activity_tracker/home.html')
+    form = ActivityForm()
+    context = {
+    'form': form,
+    }
+    return render(request, 'activity_tracker/home.html', context)
 
 
 def sign_up(request):
@@ -38,7 +45,7 @@ class login_view(LoginView):
     redirect_authenticated_user = True
     
     def get_success_url(self):
-        return reverse_lazy('home')
+        return reverse_lazy('dashboard')
 
 
 def logout_view(request):
@@ -78,24 +85,6 @@ def dashboard_view(request):
     
     return render(request, 'activity_tracker/dashboard.html', context)
 
-
-# @login_required
-# def add_activity(request):
-#     if request.method == 'POST':
-#         form = ActivityForm(request.POST)
-#         if form.is_valid():
-#             activity = form.save(commit=False)
-#             activity.user = request.user  
-#             activity.save()
-#             messages.success(request, "Activity added successfully!")
-#             return redirect('dashboard') 
-#         else:
-#             messages.error(request, "There was an error in your form. Please fix it and try again.")
-#     else:
-#         form = ActivityForm()
-
-#     return render(request, 'activity_tracker/add_activity.html', {'form': form})
-
 @login_required
 def add_activity(request):
     if request.method == 'POST':
@@ -108,3 +97,84 @@ def add_activity(request):
         else:
             messages.error(request, "There was an error in your form. Please fix it and try again.")
     return redirect('dashboard') 
+
+
+
+@login_required
+def dashboard_day_view(request):
+    today = timezone.now().date()
+    today_activities = Activity.objects.filter(
+        user=request.user, 
+        start_time__date=today
+    ).order_by('-start_time')
+    
+    tag_stats = Activity.objects.filter(
+        user=request.user, 
+        start_time__date=today
+    ).values('activity_type') \
+     .annotate(
+         total_duration=Sum('duration'),
+         activity_count=Count('id')
+     )
+     
+    context = {
+        'today_activities': today_activities,
+        'tag_stats': tag_stats,
+     }
+    
+    return render(request, 'activity_tracker/dashboard_day.html', context)
+    
+    
+@login_required
+def dashboard_week_view(request):
+    today = timezone.now().date()
+    today_activities = Activity.objects.filter(
+        user=request.user, 
+        start_time__date=today
+    ).order_by('-start_time')
+    
+    tag_stats = Activity.objects.filter(
+        user=request.user, 
+        start_time__date=today
+    ).values('activity_type') \
+     .annotate(
+         total_duration=Sum('duration'),
+         activity_count=Count('id')
+     )
+     
+    context = {
+        'today_activities': today_activities,
+        'tag_stats': tag_stats,
+     }
+    
+    return render(request, 'activity_tracker/dashboard_week.html', context)
+
+
+@login_required
+def dashboard_month_view(request):
+    today = timezone.now().date()
+    today_activities = Activity.objects.filter(
+        user=request.user, 
+        start_time__date=today
+    ).order_by('-start_time')
+    
+    tag_stats = Activity.objects.filter(
+        user=request.user, 
+        start_time__date=today
+    ).values('activity_type') \
+     .annotate(
+         total_duration=Sum('duration'),
+         activity_count=Count('id')
+     )
+     
+    context = {
+        'today_activities': today_activities,
+        'tag_stats': tag_stats,
+     }
+    
+    return render(request, 'activity_tracker/dashboard_month.html', context)
+    
+    
+     
+    
+    

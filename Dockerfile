@@ -1,17 +1,21 @@
-# Use an official Python runtime as a parent image
+# Dockerfile
 FROM python:3.12.7
 
-# Set the working directory
-WORKDIR /app
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-# Copy the project files into the container
-COPY . /app
+WORKDIR /activity_tracker
 
-# Install dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev && \
+    apt-get clean
+
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose the port the app runs on
+COPY . .
+
 EXPOSE 8000
 
-# Command to run the app
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

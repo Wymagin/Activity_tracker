@@ -20,36 +20,13 @@
 </div>
 {% endif %}
 <div class="container dashboard">
-  <h1>Today's Activities</h1>
+  <h1>sadasdad</h1>
 
-  <div class="row">
-    <div class="col-md-8">
-      <h2>Activity List</h2>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Activity</th>
-            <th>Tag</th>
-            <th>Start Time</th>
-            <th>Duration</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for activity in today_activities %}
-          <tr>
-            <td>{{ activity.name }}</td>
-            <td>{{ activity.get_activity_type_display }}</td>
-            <td>{{ activity.start_time|time:"H:i" }}</td>
-            <td>{{ activity.duration }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+  
 
     
     <div class="col-md-4">
-
+ssssssss
       <h2>Activity Statistics</h2>
       <ul class="list-group">
         {% for tag_stat in tag_stats %}

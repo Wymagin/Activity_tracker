@@ -1,3 +1,5 @@
+from datetime import timedelta
+from django.utils import timezone
 import plotly.express as px
 import plotly.offline as opy
 import pandas as pd
@@ -45,9 +47,21 @@ def create_daily_activities_chart(user):
     return chart_div
 
 
-def agg_activities_by_type(user):
+def agg_activities_by_type(user, period='year'):
+    now = timezone.now()
+    if period == 'day':
+        start_date = now - timedelta(days=1)
+    elif period == 'week':
+        start_date = now - timedelta(weeks=1)
+    elif period == 'month':
+        start_date = now - timedelta(days=30)
+    elif period == 'year':
+        start_date = now - timedelta(days=365)
+    else:
+        raise ValueError("Invalid period. Choose from 'day', 'week', 'month', or 'year'.")
+  
     activities_by_type = (
-    Activity.objects.filter(user=user)
+    Activity.objects.filter(user=user, start_time__gte=start_date)
     .values('activity_type')
     .annotate(activity_count=Count('id'))
     .order_by('activity_type')
@@ -55,20 +69,8 @@ def agg_activities_by_type(user):
     return activities_by_type
 
 
-def create_activities_by_type_chart(user):
-    df = pd.DataFrame(agg_activities_by_type(user))
-
-    # fig = px.bar(
-    #     df,
-    #     x="day",
-    #     y="activity_count",
-    #     color="activity_type",
-    #     title="Activities by Type per Day",
-    #     labels={"day": "Date",
-    #             "activity_count": "Number of Activities",
-    #             "activity_type": "Activity Type"}
-    # )
-    # chart_div = opy.plot(fig, output_type='div', include_plotlyjs=True)
+def create_activities_by_type_chart(user,period):
+    df = pd.DataFrame(agg_activities_by_type(user, period))
     fig = px.pie(df,
                 values='activity_count',
                 names='activity_type',

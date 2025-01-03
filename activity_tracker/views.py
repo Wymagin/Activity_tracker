@@ -55,11 +55,26 @@ def logout_view(request):
 @login_required
 def dashboard_view(request):
     # Get today's activities
+    period = request.GET.get('period', 'year')
     today = timezone.now().date()
     today_activities = Activity.objects.filter(
         user=request.user, 
         start_time__date=today
     ).order_by('-start_time')
+    
+    # Create a default activity if none exist
+    if not today_activities.exists():
+        Activity.objects.create(
+            user=request.user,
+            name = 'Hello',
+            activity_type='Hobby',
+            start_time=timezone.now(),
+            description = "Thank you for visiting our site today"
+        )
+        today_activities = Activity.objects.filter(
+            user=request.user, 
+            start_time__date=today
+        ).order_by('-start_time')
     
     # Tag-based statistics
     tag_stats = Activity.objects.filter(
@@ -72,7 +87,7 @@ def dashboard_view(request):
      )
 
     daily_activities_chart = create_daily_activities_chart(request.user)
-    activities_by_type_chart = create_activities_by_type_chart(request.user)
+    activities_by_type_chart = create_activities_by_type_chart(request.user, period)
     form = ActivityForm()
     
     context = {
@@ -81,6 +96,7 @@ def dashboard_view(request):
         'daily_activities_chart': daily_activities_chart,
         'activities_by_type_chart': activities_by_type_chart,
         'form': form,
+        'selected_period': period,
     }
     
     return render(request, 'activity_tracker/dashboard.html', context)

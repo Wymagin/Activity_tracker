@@ -101,7 +101,7 @@ def create_activities_by_type_chart(user,period):
     fig = px.pie(df,
                 values='activity_count',
                 names='activity_type',
-                title=f'Activities by Type per {period.title()}',
+                title=f'Activities by Type this {period.title()}',
                 labels={'activity_type': 'Activity Type', 'activity_count': 'Number of Activities'},)
     chart_div = opy.plot(fig, output_type='div', include_plotlyjs=True)
     return chart_div

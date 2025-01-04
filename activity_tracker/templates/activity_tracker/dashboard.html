@@ -20,44 +20,43 @@
 </div>
 {% endif %}
 <div class="container dashboard">
-  <h1>sadasdad</h1>
+  <h1>          </h1>
 
   
 
     
     <div class="col-md-4">
-ssssssss
       <h2>Activity Statistics</h2>
       <ul class="list-group">
         {% for tag_stat in tag_stats %}
-        <li
-          class="list-group-item d-flex justify-content-between align-items-center"
-        >
-          {{ tag_stat.activity_type }}
-          <span class="badge bg-primary">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <span class="flex-grow-1"><button type="button" class="btn btn-success"style="min-width: 100px;">{{ tag_stat.activity_type }} </button></span>
+          <span class="badge bg-primary d-flex justify-content-center align-items-center" style="min-width: 100px;">
             {{ tag_stat.activity_count }} activities
           </span>
-          <span class="badge bg-secondary">
+          <span class="badge bg-secondary"style="min-width: 80px;">
             {{ tag_stat.total_duration }}
           </span>
         </li>
         {% endfor %}
       </ul>
     </div>
+    <div class="row">
+      <div class="col-12">
+        <h2>Daily Activities</h2>
+        {{ daily_activities_chart|safe }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <h2>Activities By Type</h2>
+        {{ activities_by_type_chart|safe }}
+      </div>
+    </div>
+  </div>
   </div>
 
-  <div class="row">
-    <div class="col-12">
-      <h2>Daily Activities</h2>
-      {{ daily_activities_chart|safe }}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-12">
-      <h2>Activities By Type</h2>
-      {{ activities_by_type_chart|safe }}
-    </div>
-  </div>
-</div>
+  
+
 
 {% endblock %}

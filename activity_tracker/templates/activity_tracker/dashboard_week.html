@@ -5,16 +5,24 @@
 
 
 <div class="container dashboard">
+
     <div class="row">
+        <div class="col-12">
+          <h2>Today Activities By Type</h2>
+          {{ week_activities_by_type_chart|safe }}
+        </div>
+      </div>
+      <div class="row">
         <div class="col-md-8">
         <h2>Activity List</h2>
         <table class="table">
             <thead>
             <tr>
                 <th>Activity</th>
-                <th>Tag</th>
+                <th>Type</th>
                 <th>Start Time</th>
                 <th>Duration</th>
+                <th>End Time</th>
             </tr>
             </thead>
             <tbody>
@@ -24,19 +32,13 @@
                 <td>{{ activity.get_activity_type_display }}</td>
                 <td>{{ activity.start_time|time:"H:i" }}</td>
                 <td>{{ activity.duration }}</td>
+                <td>{{ activity.end_time|time:"H:i" }}</td>
             </tr>
             {% endfor %}
             </tbody>
         </table>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12">
-          <h2>Today Activities By Type</h2>
-          {{ week_activities_by_type_chart|safe }}
-        </div>
-      </div>
-      
 </div>
 
 

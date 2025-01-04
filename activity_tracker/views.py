@@ -70,6 +70,7 @@ def dashboard_view(request):
     # Get yearly activities
     period = request.GET.get('period', 'year')
     today = timezone.now().date()
+    this_year = timezone.now().date().replace(month=1, day=1)
     today_activities = Activity.objects.filter(
         user=request.user, 
         start_time__date=today
@@ -79,20 +80,20 @@ def dashboard_view(request):
     if not today_activities.exists():
         Activity.objects.create(
             user=request.user,
-            name = 'Hello',
+            name='Hello',
             activity_type='Hobby',
             start_time=timezone.now(),
-            description = "Thank you for visiting our site today"
+            description="Thank you for visiting our site today"
         )
         today_activities = Activity.objects.filter(
             user=request.user, 
             start_time__date=today
         ).order_by('-start_time')
     
-    # Tag-based statistics
+    # Tag-based statistics for the whole year
     tag_stats = Activity.objects.filter(
         user=request.user, 
-        start_time__date=today
+        start_time__date__gte=this_year
     ).values('activity_type') \
      .annotate(
          total_duration=Sum('duration'),
@@ -147,14 +148,15 @@ def dashboard_day_view(request):
 @login_required
 def dashboard_week_view(request):
     today = timezone.now().date()
+    this_week = today - timezone.timedelta(days=today.weekday())
     today_activities = Activity.objects.filter(
         user=request.user, 
-        start_time__date=today
+        start_time__date__gte=this_week
     ).order_by('-start_time')
     
     tag_stats = Activity.objects.filter(
         user=request.user, 
-        start_time__date=today
+        start_time__date__gte=this_week
     ).values('activity_type') \
      .annotate(
          total_duration=Sum('duration'),
@@ -174,15 +176,16 @@ def dashboard_week_view(request):
 
 @login_required
 def dashboard_month_view(request):
+    this_month = timezone.now().replace(day=1).date()
     today = timezone.now().date()
     today_activities = Activity.objects.filter(
         user=request.user, 
-        start_time__date=today
+        start_time__date__gte=this_month
     ).order_by('-start_time')
     
     tag_stats = Activity.objects.filter(
         user=request.user, 
-        start_time__date=today
+        start_time__date__gte=this_month
     ).values('activity_type') \
      .annotate(
          total_duration=Sum('duration'),

@@ -4,7 +4,7 @@ import plotly.express as px
 import plotly.offline as opy
 import pandas as pd
 from django.db.models import Count, Sum, DurationField
-from django.db.models.functions import TruncDate
+from django.db.models.functions import TruncDate, TruncDay, TruncWeek, TruncMonth, TruncYear
 from .models import Activity
 
 
@@ -47,26 +47,53 @@ def create_daily_activities_chart(user):
     return chart_div
 
 
-def agg_activities_by_type(user, period='year'):
-    now = timezone.now()
-    if period == 'day':
-        start_date = now - timedelta(days=1)
-    elif period == 'week':
-        start_date = now - timedelta(weeks=1)
-    elif period == 'month':
-        start_date = now - timedelta(days=30)
-    elif period == 'year':
-        start_date = now - timedelta(days=365)
-    else:
-        raise ValueError("Invalid period. Choose from 'day', 'week', 'month', or 'year'.")
+# def agg_activities_by_type(user, period='year'):
+#     now = timezone.now()
+#     if period == 'day':
+#         start_date = now - timedelta(days=1)
+#     elif period == 'week':
+#         start_date = now - timedelta(weeks=1)
+#     elif period == 'month':
+#         start_date = now - timedelta(days=30)
+#     elif period == 'year':
+#         start_date = now - timedelta(days=365)
+#     else:
+#         raise ValueError("Invalid period. Choose from 'day', 'week', 'month', or 'year'.")
   
-    activities_by_type = (
-    Activity.objects.filter(user=user, start_time__gte=start_date)
-    .values('activity_type')
-    .annotate(activity_count=Count('id'))
-    .order_by('activity_type')
-    )
-    return activities_by_type
+#     activities_by_type = (
+#     Activity.objects.filter(user=user, start_time__gte=start_date)
+#     .values('activity_type')
+#     .annotate(activity_count=Count('id'))
+#     .order_by('activity_type')
+#     )
+#     return activities_by_type
+
+def agg_activities_by_type(user, period):
+    now = timezone.now()
+    trunc_map = {
+        'day': TruncDay('start_time'),
+        'week': TruncWeek('start_time'),
+        'month': TruncMonth('start_time'),
+        'year': TruncYear('start_time')
+    }
+    
+    date_filters = {
+        'day': now.date(),
+        'week': now.date() - timedelta(days=now.weekday()),
+        'month': now.replace(day=1).date(),
+        'year': now.replace(month=1, day=1).date()
+    }
+    
+    return (Activity.objects.filter(
+            user=user,
+            start_time__date__gte=date_filters[period]
+        )
+        .annotate(period=trunc_map[period])
+        .values('activity_type', 'period')
+        .annotate(activity_count=Count('id'))
+        .order_by('period', 'activity_type'))
+
+
 
 
 def create_activities_by_type_chart(user,period):
@@ -74,7 +101,13 @@ def create_activities_by_type_chart(user,period):
     fig = px.pie(df,
                 values='activity_count',
                 names='activity_type',
-                title='Activities by Type per Day',
+                title=f'Activities by Type per {period.title()}',
                 labels={'activity_type': 'Activity Type', 'activity_count': 'Number of Activities'},)
     chart_div = opy.plot(fig, output_type='div', include_plotlyjs=True)
     return chart_div
+
+
+# Todo
+# chart_day = create_activities_by_type_chart(user, 'day')
+# chart_week = create_activities_by_type_chart(user, 'week')
+# chart_month = create_activities_by_type_chart(user, 'month')

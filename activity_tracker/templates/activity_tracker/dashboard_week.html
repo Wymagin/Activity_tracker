@@ -1,14 +1,43 @@
 {% extends 'activity_tracker/base.html' %} 
+{% load crispy_forms_tags %} 
 {% block content %} 
 
 
-<div class="container mt-4">
-    <h2>Activity Breakdown</h2>
-    <div id="chart-container">
-        {{ chart|safe }}
-    </div>
-</div>
 
+<div class="container dashboard">
+    <div class="row">
+        <div class="col-md-8">
+        <h2>Activity List</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Activity</th>
+                <th>Tag</th>
+                <th>Start Time</th>
+                <th>Duration</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for activity in today_activities %}
+            <tr>
+                <td>{{ activity.name }}</td>
+                <td>{{ activity.get_activity_type_display }}</td>
+                <td>{{ activity.start_time|time:"H:i" }}</td>
+                <td>{{ activity.duration }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+          <h2>Today Activities By Type</h2>
+          {{ week_activities_by_type_chart|safe }}
+        </div>
+      </div>
+      
+</div>
 
 
 {% endblock %}

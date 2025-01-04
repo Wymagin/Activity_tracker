@@ -53,8 +53,21 @@ def logout_view(request):
     return redirect('login')
 
 @login_required
+def add_activity(request):
+    if request.method == 'POST':
+        form = ActivityForm(request.POST)
+        if form.is_valid():
+            activity = form.save(commit=False)
+            activity.user = request.user  
+            activity.save()
+            messages.success(request, "Activity added successfully!")
+        else:
+            messages.error(request, "There was an error in your form. Please fix it and try again.")
+    return redirect('dashboard') 
+
+@login_required
 def dashboard_view(request):
-    # Get today's activities
+    # Get yearly activities
     period = request.GET.get('period', 'year')
     today = timezone.now().date()
     today_activities = Activity.objects.filter(
@@ -101,20 +114,6 @@ def dashboard_view(request):
     
     return render(request, 'activity_tracker/dashboard.html', context)
 
-@login_required
-def add_activity(request):
-    if request.method == 'POST':
-        form = ActivityForm(request.POST)
-        if form.is_valid():
-            activity = form.save(commit=False)
-            activity.user = request.user  
-            activity.save()
-            messages.success(request, "Activity added successfully!")
-        else:
-            messages.error(request, "There was an error in your form. Please fix it and try again.")
-    return redirect('dashboard') 
-
-
 
 @login_required
 def dashboard_day_view(request):
@@ -133,9 +132,13 @@ def dashboard_day_view(request):
          activity_count=Count('id')
      )
      
+    chart_day = create_activities_by_type_chart(request.user, 'day')
+    form = ActivityForm()
     context = {
         'today_activities': today_activities,
         'tag_stats': tag_stats,
+        'day_activities_by_type_chart': chart_day,
+        'form': form,
      }
     
     return render(request, 'activity_tracker/dashboard_day.html', context)
@@ -157,10 +160,13 @@ def dashboard_week_view(request):
          total_duration=Sum('duration'),
          activity_count=Count('id')
      )
-     
+    chart_week = create_activities_by_type_chart(request.user, 'week')
+    form = ActivityForm()
     context = {
         'today_activities': today_activities,
         'tag_stats': tag_stats,
+        'week_activities_by_type_chart': chart_week,
+        'form': form,
      }
     
     return render(request, 'activity_tracker/dashboard_week.html', context)
@@ -182,10 +188,14 @@ def dashboard_month_view(request):
          total_duration=Sum('duration'),
          activity_count=Count('id')
      )
-     
+    
+    chart_month = create_activities_by_type_chart(request.user, 'month')
+    form = ActivityForm()
     context = {
         'today_activities': today_activities,
         'tag_stats': tag_stats,
+        'month_activities_by_type_chart': chart_month,
+        'form': form,
      }
     
     return render(request, 'activity_tracker/dashboard_month.html', context)

@@ -1,4 +1,5 @@
 {% extends 'activity_tracker/base.html' %} 
+{% load crispy_forms_tags %} 
 {% block content %} 
 
 <div class="container dashboard">
@@ -27,6 +28,14 @@
         </table>
         </div>
     </div>
+    <div class="row">
+        <div class="col-12">
+          <h2>Today Activities By Type</h2>
+          {{ day_activities_by_type_chart|safe }}
+        </div>
+      </div>
+      
 </div>
+
 
 {% endblock %}

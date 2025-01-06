@@ -26,18 +26,18 @@ def create_daily_activities_chart(user):
     df = pd.DataFrame(daily_activities)
     
     # Convert duration to minutes for better visualization
-    df['total_duration_minutes'] = df['total_duration'].apply(lambda x: x.total_seconds() / 60 if x else 0)
+    df['total_duration_hours'] = df['total_duration'].apply(lambda x: x.total_seconds() / 60 / 60 if x else 0)
     
     # Create plotly figure
     fig = px.bar(
         df, 
         x='day', 
-        y='total_duration_minutes', 
+        y='total_duration_hours', 
         color='activity_count',
         title='Daily Activity Duration',
         labels={
             'day': 'Date', 
-            'total_duration_minutes': 'Total Duration (minutes)',
+            'total_duration_hours': 'Total Duration (hours)',
             'activity_count': 'Number of Activities'
         }
     )

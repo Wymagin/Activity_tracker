@@ -1,26 +1,64 @@
 {% extends 'activity_tracker/base.html' %}
-
+{% load static %}
 {% block content %}
-<header class="bg-primary bg-gradient text-white">
+<header class="bg-primary bg-gradient text-white py-5">
     <div class="container px-4 text-center">
         <h1 class="fw-bolder">Welcome to Activity Tracker</h1>
         <p class="lead">Site where you can track your daily activity</p>
-        <a class="btn btn-lg btn-light" href = "{% url 'register' %}">CREATE ACCOUNT NOW!</a>
+        {% if user.is_authenticated %}
+        <a class="btn btn-lg btn-light" href="{% url 'dashboard' %}">WELCOME!</a>
+        {% else %}
+        <a class="btn btn-lg btn-light" href="{% url 'register' %}">CREATE ACCOUNT NOW!</a>
+        {% endif %}
     </div>
 </header>
 <!-- About section-->
-<section id="about">
+<section id="about" class="py-5">
     <div class="container px-4">
         <div class="row gx-4 justify-content-center">
             <div class="col-lg-8">
-                <h2>About this page</h2>
-                <p class="lead">This is a great place to talk about your webpage. This template is purposefully unstyled so you can use it as a boilerplate or starting point for you own landing page designs! This template features:</p>
+                <h2>About Activity Tracker</h2>
+                <p class="lead">Activity Tracker is designed to help you monitor and improve your daily activities. Our platform offers:</p>
                 <ul>
-                    <li>Clickable nav links that smooth scroll to page sections</li>
-                    <li>Responsive behavior when clicking nav links perfect for a one page website</li>
-                    <li>Bootstrap's scrollspy feature which highlights which section of the page you're on in the navbar</li>
-                    <li>Minimal custom CSS so you are free to explore your own unique design options</li>
+                    <li>Detailed tracking of your activities</li>
+                    <li>Access to your daily, weekly and monthly activities history</li>
+                    <li>Customizable activity types</li>
                 </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Features section-->
+<section id="features" class="py-5 bg-light">
+    <div class="container px-4">
+        <div class="row gx-4 justify-content-center">
+            <div class="col-lg-8">
+                <h2>Features</h2>
+                <p class="lead">Our Activity Tracker offers a variety of features to help you stay on top of your daily activities:</p>
+                <ul>
+                    <li>Track your daily routine</li>
+                    <li>Monitor your sleep time</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Gallery section-->
+<section id="gallery" class="py-5">
+    <div class="container px-4">
+        <div class="row gx-4 justify-content-center">
+            <div class="col-lg-8">
+                <h2>Gallery</h2>
+                <p class="lead">Check out some screenshots of our app in action:</p>
+                <div class="row">
+                    <div class="col-md-12 mb-3 justify-content-center align-items-center">
+                        <img src="{% static 'images/im1activity.png' %}" class="img-fluid rounded align-items-center" alt="Screenshot 1">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <img src="{% static 'images/im2activity.png' %}" class="img-fluid rounded" alt="Screenshot 4">
+                        </div>
+                </div>
             </div>
         </div>
     </div>

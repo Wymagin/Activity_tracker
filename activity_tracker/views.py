@@ -81,7 +81,7 @@ def dashboard_view(request):
         Activity.objects.create(
             user=request.user,
             name='Hello',
-            activity_type='Hobby',
+            activity_type='First daily visit',
             start_time=timezone.now(),
             description="Thank you for visiting our site today"
         )

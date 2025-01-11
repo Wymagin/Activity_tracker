@@ -54,18 +54,5 @@ Dockerfile: The Dockerfile for building the web service container.
 
 docker-compose.yml: The Docker Compose configuration file.
 
-### Environment Variables
-The application uses the following environment variables:
-
-DJANGO_SECRET_KEY: The secret key for Django.
-
-POSTGRES_DB: The PostgreSQL database name.
-
-POSTGRES_USER: The PostgreSQL user.
-
-POSTGRES_PASSWORD: The PostgreSQL user password.
-
-These variables can be set in a .env file in the project root.
-
 ### License
 This project is licensed under the MIT License. See the LICENSE file for details.

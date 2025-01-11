@@ -15,6 +15,19 @@ Activity Tracker is a web application for tracking activities. This project is b
 git clone https://github.com/Wymagin/Activity_tracker.git
 cd Activity_tracker
 ```
+### Generate a Django Secret Key
+
+Before running the application, ensure that you have a unique secret key set in your settings.py file. You can generate a secret key using the following Python script:
+
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+
+Once generated, set the SECRET_KEY environment variable or update the settings.py file directly:
+
+```bash
+SECRET_KEY = 'your-generated-secret-key'
+```
 
 ## Build and Run the Application
 

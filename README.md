@@ -62,11 +62,13 @@ docker-compose down
 
 ## Project Structure
 
-activity_tracker/: The Django project directory.
+Activity_tracker/
+├── activity_tracker/   # Main Django project
+├── Dockerfile          # Dockerfile for the web service
+├── docker-compose.yml  # Docker Compose configuration
+├── README.md           # Project documentation
+└── requirements.txt    # Python dependencies
 
-Dockerfile: The Dockerfile for building the web service container.
-
-docker-compose.yml: The Docker Compose configuration file.
 
 ### License
 This project is licensed under the MIT License. See the LICENSE file for details.

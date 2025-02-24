@@ -6,6 +6,7 @@ Activity Tracker is a web application for tracking activities. This project is b
 
 - Docker
 - Docker Compose
+- Docker Desktop or Docker Engine and Docker Compose CLI
 
 ## Getting Started
 

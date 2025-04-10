@@ -67,7 +67,6 @@ Activity_tracker/
 ├── activity_tracker/   # Main Django project
 ├── Dockerfile          # Dockerfile for the web service
 ├── docker-compose.yml  # Docker Compose configuration
-├── .env.example        # Example environment file (optional)
 ├── README.md           # Project documentation
 └── requirements.txt    # Python dependencies
 ```

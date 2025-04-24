@@ -202,6 +202,13 @@ def dashboard_month_view(request):
      }
     
     return render(request, 'activity_tracker/dashboard_month.html', context)
+
+def expenses_view(request):
+    # Placeholder for expenses view
+    return render(request, 'activity_tracker/expenses.html', {
+        'title': 'Expenses',
+        'welcome_message': 'Track and Manage Your Expenses',
+    })
     
     
      

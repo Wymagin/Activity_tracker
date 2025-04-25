@@ -28,6 +28,7 @@ urlpatterns = [
     path('login/', views.login_view.as_view(), name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('add-activity/', views.add_activity, name='add_activity'),
+    path('expenses/', views.expenses_view, name='expenses'),
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('dashboard/day/', views.dashboard_day_view, name='dashboard_day'),
     path('dashboard/week/', views.dashboard_week_view, name='dashboard_week'),

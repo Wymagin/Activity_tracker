@@ -1,0 +1,60 @@
+{% extends 'activity_tracker/base.html' %} 
+{% load crispy_forms_tags %} 
+{% block content %} 
+{% if messages %}
+<div class="alert-container">
+  {% for message in messages %}
+  <div
+    class="alert alert-{{ message.tags }} alert-dismissible fade show"
+    role="alert"
+  >
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+<div class="container dashboard">
+  <div class="row"> 
+    <div class="col-md-4 pt-3">
+      {% comment %} <h2><span class="badge bg-warning">Expenses statistics</span></h2>
+      <ul class="list-group">
+        {% for tag_stat in tag_stats %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <span class="flex-grow-1"><button type="button" class="btn btn-success"style="min-width: 100px;">{{ tag_stat.activity_type }} </button></span>
+          <span class="badge bg-primary d-flex justify-content-center align-items-center" style="min-width: 100px;">
+            {{ tag_stat.activity_count }} activities
+          </span>
+          <span class="badge bg-secondary"style="min-width: 80px;">
+            {{ tag_stat.total_duration }}
+          </span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-md-8 pt-3 d-flex align-items-center justify-content-center">
+      <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#addActivityModal">
+        Add Activity
+    </button>
+
+    </div>
+  </div>
+    <div class="row">
+      <div class="col-12 pt-3">
+        <h2><span class="badge bg-warning">Daily Activities</span></h2>
+        {{ daily_activities_chart|safe }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 pt-3">
+        <h2><span class="badge bg-warning">Activities by Type</span></h2>
+        {{ activities_by_type_chart|safe }}
+      </div>
+    </div> {% endcomment %}
+  </div>
+  </div>

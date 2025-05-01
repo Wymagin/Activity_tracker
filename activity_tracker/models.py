@@ -55,3 +55,42 @@ class Activity(models.Model):
             models.Index(fields=['end_time']),
             models.Index(fields=['activity_type']),
         ]
+        
+        
+class Expense(models.Model):
+    TAGS = [
+        ('food', 'Food'),
+        ('transport', 'Transport'),
+        ('entertainment', 'Entertainment'),
+        ('bills', 'Bills'),
+        ('shopping', 'Shopping'),
+        ('other', 'Other')
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    category = models.CharField(max_length=50, choices=TAGS, default='other')
+    description = models.TextField(blank=True)
+    date = models.DateField(auto_now_add=True)
+
+
+    def __str__(self):
+        return f"{self.category} - {self.amount}"
+    
+    def clean(self):
+        super().clean()  # Call parent clean() if necessary
+        # Ensure amount is positive
+        if self.amount <= 0:
+            raise ValidationError("Amount must be positive.")
+        
+    def save(self, *args, **kwargs):
+        # Validate the input 
+        self.clean()
+        super().save(*args, **kwargs)
+        
+    class Meta:
+        indexes = [
+            models.Index(fields=['user']),
+            models.Index(fields=['date']),
+            models.Index(fields=['category']),
+        ]

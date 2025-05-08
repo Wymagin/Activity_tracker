@@ -3,12 +3,13 @@ from django.contrib.auth.decorators import login_required
 from .forms import UserRegistrationForm, ActivityForm
 from django.utils import timezone
 from django.db.models import Sum, Count
-from .models import Activity
+from .models import Activity, Expense
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from .utils import create_daily_activities_chart, create_activities_by_type_chart
+from datetime import date
 
 # def base_view(request):
 #     return render(request, 'activity_tracker/base.html', {
@@ -90,6 +91,8 @@ def dashboard_view(request):
             start_time__date=today
         ).order_by('-start_time')
     
+    
+    
     # Tag-based statistics for the whole year
     tag_stats = Activity.objects.filter(
         user=request.user, 
@@ -99,6 +102,17 @@ def dashboard_view(request):
          total_duration=Sum('duration'),
          activity_count=Count('id')
      )
+    expenses_tag_stats = Expense.objects.filter(
+        user=request.user,
+        year=date.today().year,
+    ).values('category') \
+     .annotate(
+            total_amount=Sum('amount'),
+            expense_count=Count('id')
+     )
+    
+    if not expenses_tag_stats:
+        expenses_tag_stats = [{'category': 'No data', 'total_amount': 0, 'expense_count': 0}]
 
     daily_activities_chart = create_daily_activities_chart(request.user)
     activities_by_type_chart = create_activities_by_type_chart(request.user, period)
@@ -107,6 +121,7 @@ def dashboard_view(request):
     context = {
         'today_activities': today_activities,
         'tag_stats': tag_stats,
+        'expenses_tag_stats': expenses_tag_stats,
         'daily_activities_chart': daily_activities_chart,
         'activities_by_type_chart': activities_by_type_chart,
         'form': form,
@@ -205,10 +220,11 @@ def dashboard_month_view(request):
 
 def expenses_view(request):
     # Placeholder for expenses view
-    return render(request, 'activity_tracker/expenses.html', {
+    context = {
         'title': 'Expenses',
         'welcome_message': 'Track and Manage Your Expenses',
-    })
+        }
+    return render(request, 'activity_tracker/expenses.html', context)
     
     
      

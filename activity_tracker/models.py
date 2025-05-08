@@ -81,7 +81,8 @@ class Expense(models.Model):
     week = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.category} - {self.amount}"
+        # return f"{self.category} - {self.amount}"
+        return f"{self.category} - {self.amount} - {self.date}"
     
     def clean(self):
         super().clean()  # Call parent clean() if necessary

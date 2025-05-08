@@ -102,13 +102,14 @@ def dashboard_view(request):
          total_duration=Sum('duration'),
          activity_count=Count('id')
      )
+     
     expenses_tag_stats = Expense.objects.filter(
         user=request.user,
         year=date.today().year,
     ).values('category') \
      .annotate(
             total_amount=Sum('amount'),
-            expense_count=Count('id')
+            expenses_count=Count('id')
      )
     
     if not expenses_tag_stats:

@@ -37,12 +37,29 @@
         {% endfor %}
       </ul>
     </div>
-    <div class="col-md-8 pt-3 d-flex align-items-center justify-content-center">
+    <div class="col-md-4 pt-3">
+      <h2><span class="badge bg-warning">Expenses Statistics</span></h2>
+      <ul class="list-group">
+        {% for expenses_tag_stat in expenses_tag_stats %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <span class="flex-grow-1"><button type="button" class="btn btn-success"style="min-width: 100px;">{{ expenses_tag_stat.category }} </button></span>
+          <span class="badge bg-primary d-flex justify-content-center align-items-center" style="min-width: 100px;">
+            {{ expenses_tag_stat.expenses_count }} expenses
+          </span>
+          <span class="badge bg-secondary"style="min-width: 80px;">
+            {{ expenses_tag_stat.total_amount }}
+          </span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    {% comment %} <div class="col-md-8 pt-3 d-flex align-items-center justify-content-center">
       <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#addActivityModal">
         Add Activity
     </button>
 
-    </div>
+    </div> {% endcomment %}
   </div>
     <div class="row">
       <div class="col-12 pt-3">

@@ -51,6 +51,8 @@
                 <h2>Gallery</h2>
                 <p class="lead">Check out some screenshots of our app in action:</p>
                 <div class="row">
+                        {{ demo_bar_chart_div|safe }}
+                        {{ demo_pie_chart_div|safe }}
                     <div class="col-md-12 mb-3 justify-content-center align-items-center">
                         <img src="{% static 'images/im1activity.png' %}" class="img-fluid rounded " alt="Screenshot 1">
                     </div>

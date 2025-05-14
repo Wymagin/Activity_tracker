@@ -22,7 +22,6 @@ def aggregate_daily_activities(user):
 def create_daily_activities_chart(user):
     daily_activities = aggregate_daily_activities(user)
     
-    # Convert to DataFrame
     df = pd.DataFrame(daily_activities)
     
     # Convert duration to minutes for better visualization
@@ -111,3 +110,51 @@ def create_activities_by_type_chart(user,period):
 # chart_day = create_activities_by_type_chart(user, 'day')
 # chart_week = create_activities_by_type_chart(user, 'week')
 # chart_month = create_activities_by_type_chart(user, 'month')
+
+
+def create_demo_bar_chart():
+    data = {
+            'day': [(timezone.now().date() - timedelta(days=i)).isoformat() for i in range(6, -1, -1)],
+            'total_duration': [
+                timedelta(hours=1.5),
+                timedelta(hours=2),
+                timedelta(hours=1),
+                timedelta(hours=3),
+                timedelta(hours=2.5),
+                timedelta(hours=1.75),
+                timedelta(hours=2.25)
+            ],
+            'activity_count': [1, 2, 1, 3, 2, 5, 2]
+        }
+    df = pd.DataFrame(data)
+    df['total_duration_hours'] = df['total_duration'].apply(lambda x: x.total_seconds() / 3600)
+
+    fig = px.bar(
+        df,
+        x='day',
+        y='total_duration_hours',
+        color='activity_count',
+        title='Demo Chart',
+        labels={
+            'day': 'Date', 
+            'total_duration_hours': 'Total Duration (hours)',
+            'activity_count': 'Number of Activities'
+        }
+    )
+    return opy.plot(fig, output_type='div', include_plotlyjs=True)
+
+
+
+def create_demo_pie_chart():
+    data = {
+            'activity_type': ['Running', 'Cycling', 'Swimming', 'Yoga'],
+            'activity_count': [10, 5, 8, 12]
+        }
+    df = pd.DataFrame(data)
+    
+    fig = px.pie(df,
+                values='activity_count',
+                names='activity_type',
+                title=f'Activities by Type',
+                labels={'activity_type': 'Activity Type', 'activity_count': 'Number of Activities'},)
+    return opy.plot(fig, output_type='div', include_plotlyjs=True)

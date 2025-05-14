@@ -22,7 +22,6 @@ def aggregate_daily_activities(user):
 def create_daily_activities_chart(user):
     daily_activities = aggregate_daily_activities(user)
     
-    # Convert to DataFrame
     df = pd.DataFrame(daily_activities)
     
     # Convert duration to minutes for better visualization
@@ -111,3 +110,41 @@ def create_activities_by_type_chart(user,period):
 # chart_day = create_activities_by_type_chart(user, 'day')
 # chart_week = create_activities_by_type_chart(user, 'week')
 # chart_month = create_activities_by_type_chart(user, 'month')
+
+
+def create_demo_chart():
+    data = {
+            'day': [
+                '2025-05-08', '2025-05-09', '2025-05-10',
+                '2025-05-11', '2025-05-12', '2025-05-13', '2025-05-14'
+            ],
+            'total_duration': [
+                timedelta(hours=1.5),
+                timedelta(hours=2),
+                timedelta(hours=1),
+                timedelta(hours=3),
+                timedelta(hours=2.5),
+                timedelta(hours=1.75),
+                timedelta(hours=2.25)
+            ],
+            'activity_count': [1, 2, 1, 3, 2, 2, 2]
+        }
+    df = pd.DataFrame(data)
+    df['total_duration_hours'] = df['total_duration'].apply(lambda x: x.total_seconds() / 3600)
+
+    fig = px.bar(
+        df,
+        x='day',
+        y='total_duration_hours',
+        color='activity_count',
+        color_discrete_sequence=px.colors.qualitative.Pastel,
+        title='Sample Daily Activity Chart',
+        labels={
+            'day': 'Date', 
+            'total_duration_hours': 'Total Duration (hours)',
+            'activity_count': 'Number of Activities'
+        }
+        
+        
+    )
+    return opy.plot(fig, output_type='div', include_plotlyjs=True)

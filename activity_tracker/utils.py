@@ -112,7 +112,7 @@ def create_activities_by_type_chart(user,period):
 # chart_month = create_activities_by_type_chart(user, 'month')
 
 
-def create_demo_chart():
+def create_demo_bar_chart():
     data = {
             'day': [(timezone.now().date() - timedelta(days=i)).isoformat() for i in range(6, -1, -1)],
             'total_duration': [
@@ -140,8 +140,21 @@ def create_demo_chart():
             'total_duration_hours': 'Total Duration (hours)',
             'activity_count': 'Number of Activities'
         }
-        
-        
     )
     return opy.plot(fig, output_type='div', include_plotlyjs=True)
-        
+
+
+
+def create_demo_pie_chart():
+    data = {
+            'activity_type': ['Running', 'Cycling', 'Swimming', 'Yoga'],
+            'activity_count': [10, 5, 8, 12]
+        }
+    df = pd.DataFrame(data)
+    
+    fig = px.pie(df,
+                values='activity_count',
+                names='activity_type',
+                title=f'Activities by Type',
+                labels={'activity_type': 'Activity Type', 'activity_count': 'Number of Activities'},)
+    return opy.plot(fig, output_type='div', include_plotlyjs=True)

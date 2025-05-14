@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .utils import create_daily_activities_chart, create_activities_by_type_chart, create_demo_chart
+from .utils import create_daily_activities_chart, create_activities_by_type_chart, create_demo_pie_chart, create_demo_bar_chart
 from datetime import date
 
 # def base_view(request):
@@ -21,11 +21,14 @@ def base_view(request):
     return redirect('home')
     
 def home_view(request):
-    demo_chart_div = create_demo_chart()
+    demo_bar_chart_div = create_demo_bar_chart()
+    demo_pie_chart_div = create_demo_pie_chart()
     form = ActivityForm()
     context = {
     'form': form,
-    'demo_chart_div': demo_chart_div,
+    'demo_bar_chart_div': demo_bar_chart_div,
+    'demo_pie_chart_div': demo_pie_chart_div,
+    
     }
     return render(request, 'activity_tracker/home.html', context)
 

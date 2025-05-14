@@ -114,10 +114,7 @@ def create_activities_by_type_chart(user,period):
 
 def create_demo_chart():
     data = {
-            'day': [
-                '2025-05-08', '2025-05-09', '2025-05-10',
-                '2025-05-11', '2025-05-12', '2025-05-13', '2025-05-14'
-            ],
+            'day': [(timezone.now().date() - timedelta(days=i)).isoformat() for i in range(6, -1, -1)],
             'total_duration': [
                 timedelta(hours=1.5),
                 timedelta(hours=2),
@@ -127,7 +124,7 @@ def create_demo_chart():
                 timedelta(hours=1.75),
                 timedelta(hours=2.25)
             ],
-            'activity_count': [1, 2, 1, 3, 2, 2, 2]
+            'activity_count': [1, 2, 1, 3, 2, 5, 2]
         }
     df = pd.DataFrame(data)
     df['total_duration_hours'] = df['total_duration'].apply(lambda x: x.total_seconds() / 3600)
@@ -137,8 +134,7 @@ def create_demo_chart():
         x='day',
         y='total_duration_hours',
         color='activity_count',
-        color_discrete_sequence=px.colors.qualitative.Pastel,
-        title='Sample Daily Activity Chart',
+        title='Demo Chart',
         labels={
             'day': 'Date', 
             'total_duration_hours': 'Total Duration (hours)',
@@ -148,3 +144,4 @@ def create_demo_chart():
         
     )
     return opy.plot(fig, output_type='div', include_plotlyjs=True)
+        

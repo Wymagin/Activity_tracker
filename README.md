@@ -1,6 +1,6 @@
 # Activity Tracker
 
-Activity Tracker is a web application for tracking activities. This project is built using Django and PostgreSQL, and is containerized using Docker Compose.
+Activity Tracker is a web application for tracking user activities and expenses. Built with Django, PostgreSQL, and containerized using Docker Compose.
 
 ## Prerequisites
 

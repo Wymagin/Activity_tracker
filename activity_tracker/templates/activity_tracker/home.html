@@ -24,7 +24,11 @@
                     <li>Access to your daily, weekly and monthly activities history</li>
                     <li>Customizable activity types</li>
                 </ul>
+                <div class="row">
+                    {{ demo_bar_chart_div|safe }}
+                </div>
             </div>
+
         </div>
     </div>
 </section>
@@ -39,6 +43,9 @@
                     <li>Track your daily routine</li>
                     <li>Monitor your sleep time</li>
                 </ul>
+                <div class="row">
+                    {{ demo_pie_chart_div|safe }}
+                </div>
             </div>
         </div>
     </div>
@@ -48,18 +55,11 @@
     <div class="container px-4">
         <div class="row gx-4 justify-content-center">
             <div class="col-lg-8">
-                <h2>Gallery</h2>
-                <p class="lead">Check out some screenshots of our app in action:</p>
-                <div class="row">
-                        {{ demo_bar_chart_div|safe }}
-                        {{ demo_pie_chart_div|safe }}
+                <h2>New Expenses Feature</h2>
+                <p class="lead">Now you can also track your Expenses</p>
                     <div class="col-md-12 mb-3 justify-content-center align-items-center">
-                        <img src="{% static 'images/im1activity.png' %}" class="img-fluid rounded " alt="Screenshot 1">
+                        {{ demo_tree_chart_div|safe }}
                     </div>
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <img src="{% static 'images/im2activity.png' %}" class="img-fluid rounded" alt="Screenshot 4">
-                        </div>
                 </div>
             </div>
         </div>

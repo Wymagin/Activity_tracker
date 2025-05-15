@@ -134,7 +134,7 @@ def create_demo_bar_chart():
         x='day',
         y='total_duration_hours',
         color='activity_count',
-        title='Demo Chart',
+        title='Your weekly Activities',
         labels={
             'day': 'Date', 
             'total_duration_hours': 'Total Duration (hours)',
@@ -155,6 +155,35 @@ def create_demo_pie_chart():
     fig = px.pie(df,
                 values='activity_count',
                 names='activity_type',
-                title=f'Activities by Type',
+                title=f'Your activities by Type',
                 labels={'activity_type': 'Activity Type', 'activity_count': 'Number of Activities'},)
+    fig.update_layout(
+    paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)'
+    ) 
+
+    return opy.plot(fig, output_type='div', include_plotlyjs=True)
+
+
+def create_demo_tree_chart():
+    data = pd.DataFrame({
+        "Category": ["Food", "Transport", "Entertainment", "Bills", "Shopping", "Other"],
+        "Amount": [250, 120, 90, 180, 130, 60]
+    })
+
+    fig = px.treemap(
+        data,
+        path=["Category"],
+        values="Amount",
+        title="Your Spending Breakdown by Category"
+    )
+    fig.update_layout(
+        margin=dict(t=40, l=0, r=0, b=0),
+    )
+    fig.update_traces(
+        textinfo="label+value+percent entry",
+        textfont=dict(size=15),
+        hovertemplate="<b>%{label}</b><br>Amount: %{value}<br>Percent: %{percentEntry:.2%}<extra></extra>"
+    )
+
     return opy.plot(fig, output_type='div', include_plotlyjs=True)

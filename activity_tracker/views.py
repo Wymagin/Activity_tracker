@@ -226,6 +226,7 @@ def dashboard_month_view(request):
     
     return render(request, 'activity_tracker/dashboard_month.html', context)
 
+@login_required
 def expenses_view(request):
     # Placeholder for expenses view
     context = {

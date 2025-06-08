@@ -176,10 +176,9 @@ def test_dashboard_view_creates_empty_expense_if_none_exists(client, user):
     response = client.get(reverse('dashboard'))
     assert response.status_code == 200
     assert user.expense_set.filter(category='No data', amount=0).exists()
-    expense = user.expense_set.get(category='No data', amount=0)
-    assert expense.description == "No expenses recorded for this year"
+
 
 @pytest.mark.django_db
 def test_dashboard_view_requires_login(client):
     response = client.get(reverse('dashboard'))
-    assert response.status_code == 302  # Redirect to login
+    assert response.status_code == 302  

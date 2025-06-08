@@ -24,7 +24,7 @@
     <div class="col-md-4 pt-3">
       <h2><span class="badge bg-warning">Activity Statistics</span></h2>
       <ul class="list-group">
-        {% for tag_stat in tag_stats %}
+        {% for tag_stat in activity_tag_stats %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
           <span class="flex-grow-1"><button type="button" class="btn btn-success"style="min-width: 100px;">{{ tag_stat.activity_type }} </button></span>
           <span class="badge bg-primary d-flex justify-content-center align-items-center" style="min-width: 100px;">
@@ -73,6 +73,11 @@
         {{ activities_by_type_chart|safe }}
       </div>
     </div>
+    <div class="row">
+      <div class="col-12 pt-3">
+        <h2><span class="badge bg-warning">Expenses by Category</span></h2>
+        {{ expenses_tree_chart|safe }}
+      </div>
   </div>
   </div>
 

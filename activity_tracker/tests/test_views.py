@@ -152,7 +152,7 @@ def test_dashboard_view_context(client, user):
     assert response.status_code == 200
 
     assert 'today_activities' in response.context
-    assert 'tag_stats' in response.context
+    assert 'activity_tag_stats' in response.context
     assert 'expenses_tag_stats' in response.context
     assert 'daily_activities_chart' in response.context
     assert 'activities_by_type_chart' in response.context
@@ -162,7 +162,7 @@ def test_dashboard_view_context(client, user):
     assert hasattr(response.context['form'], 'is_valid')
 
 @pytest.mark.django_db
-def test_dashboard_view_creates_activity_if_none_exists(client, user):
+def test_dashboard_view_creates_daily_activity_if_none_exists(client, user):
     client.force_login(user)
     response = client.get(reverse('dashboard'))
     assert response.status_code == 200
@@ -170,12 +170,16 @@ def test_dashboard_view_creates_activity_if_none_exists(client, user):
     activity = user.activity_set.get(name='Hello', activity_type='Daily visit')
     assert activity.description == "Thank you for visiting our site today"
    
-@pytest.mark.django_db 
-def test_dashboard_view_creates_empty_expense_if_none_exists(client, user):
+@pytest.mark.django_db
+def test_dashboard_view_expenses_placeholder_in_context(client, user):
     client.force_login(user)
     response = client.get(reverse('dashboard'))
     assert response.status_code == 200
-    assert user.expense_set.filter(category='No data', amount=0).exists()
+    expenses_tag_stats = response.context['expenses_tag_stats']
+    assert isinstance(expenses_tag_stats, list)
+    assert expenses_tag_stats[0]['category'] == 'No data'
+    assert expenses_tag_stats[0]['total_amount'] == 0
+    assert expenses_tag_stats[0]['expenses_count'] == 0
 
 
 @pytest.mark.django_db

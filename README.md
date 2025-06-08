@@ -5,8 +5,8 @@ Activity Tracker is a web application for tracking user activities and expenses.
 ## Prerequisites
 
 - Docker
-- Docker Compose
-- Docker Desktop or Docker Engine and Docker Compose CLI
+- Docker Compose (v2+ – used via `docker compose` command)
+- Docker Desktop or Docker Engine with Docker CLI plugin support
 
 ## Getting Started
 
@@ -35,7 +35,7 @@ SECRET_KEY = 'your-generated-secret-key'
 ### Build the Docker containers and start the application:
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 The application will be available at http://localhost:8000.
 
@@ -43,7 +43,7 @@ The application will be available at http://localhost:8000.
 To apply database migrations, run:
 
 ```bash
-docker-compose run web python manage.py migrate
+docker compose run web python manage.py migrate
 ```
 
 ### Creating a Superuser
@@ -51,13 +51,13 @@ docker-compose run web python manage.py migrate
 To create a superuser for accessing the Django admin, run:
 
 ```bash
-docker-compose run web python manage.py createsuperuser
+docker compose run web python manage.py createsuperuser
 ```
 ### Stopping the Application
 
 To stop the application, run:
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ## Project Structure

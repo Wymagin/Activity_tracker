@@ -5,7 +5,7 @@ import plotly.offline as opy
 import pandas as pd
 from django.db.models import Count, Sum, DurationField
 from django.db.models.functions import TruncDate, TruncDay, TruncWeek, TruncMonth, TruncYear
-from .models import Activity
+from .models import Activity, Expense
 
 
 def aggregate_daily_activities(user):
@@ -45,28 +45,6 @@ def create_daily_activities_chart(user):
     chart_div = opy.plot(fig, output_type='div', include_plotlyjs=True)
     return chart_div
 
-
-# def agg_activities_by_type(user, period='year'):
-#     now = timezone.now()
-#     if period == 'day':
-#         start_date = now - timedelta(days=1)
-#     elif period == 'week':
-#         start_date = now - timedelta(weeks=1)
-#     elif period == 'month':
-#         start_date = now - timedelta(days=30)
-#     elif period == 'year':
-#         start_date = now - timedelta(days=365)
-#     else:
-#         raise ValueError("Invalid period. Choose from 'day', 'week', 'month', or 'year'.")
-  
-#     activities_by_type = (
-#     Activity.objects.filter(user=user, start_time__gte=start_date)
-#     .values('activity_type')
-#     .annotate(activity_count=Count('id'))
-#     .order_by('activity_type')
-#     )
-#     return activities_by_type
-
 def agg_activities_by_type(user, period):
     now = timezone.now()
     trunc_map = {
@@ -75,7 +53,7 @@ def agg_activities_by_type(user, period):
         'month': TruncMonth('start_time'),
         'year': TruncYear('start_time')
     }
-    
+
     date_filters = {
         'day': now.date(),
         'week': now.date() - timedelta(days=now.weekday()),
@@ -92,9 +70,6 @@ def agg_activities_by_type(user, period):
         .annotate(activity_count=Count('id'))
         .order_by('period', 'activity_type'))
 
-
-
-
 def create_activities_by_type_chart(user,period):
     df = pd.DataFrame(agg_activities_by_type(user, period))
     fig = px.pie(df,
@@ -104,6 +79,35 @@ def create_activities_by_type_chart(user,period):
                 labels={'activity_type': 'Activity Type', 'activity_count': 'Number of Activities'},)
     chart_div = opy.plot(fig, output_type='div', include_plotlyjs=True)
     return chart_div
+
+
+
+def agg_expenses_by_category(user):
+    expenses = Expense.objects.filter(user=user)
+    return expenses.values('category').annotate(total_amount=Sum('amount'))
+
+
+def create_expenses_tree_chart(user):
+    data = pd.DataFrame(agg_expenses_by_category(user))
+    if data.empty:
+        # Provide a placeholder row if there are no expenses
+        data = pd.DataFrame([{"category": "No data", "total_amount": 0}])
+        
+    fig = px.treemap(
+        data,
+        path=["category"],
+        values="total_amount",
+        title="Your Spending Breakdown by Category"
+    )
+    fig.update_layout(
+        margin=dict(t=40, l=0, r=0, b=0),
+    )
+    fig.update_traces(
+        textinfo="label+value+percent entry",
+        textfont=dict(size=15),
+        hovertemplate="<b>%{label}</b><br>Amount: %{value}<br>Percent: %{percentEntry:.2%}<extra></extra>"
+    )
+    return opy.plot(fig, output_type='div', include_plotlyjs=True)
 
 
 # Todo

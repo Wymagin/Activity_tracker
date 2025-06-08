@@ -9,6 +9,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from .utils import create_daily_activities_chart, create_activities_by_type_chart, create_demo_pie_chart, create_demo_bar_chart, create_demo_tree_chart
+from .utils import create_expenses_tree_chart
 from datetime import date
 
 # def base_view(request):
@@ -101,7 +102,7 @@ def dashboard_view(request):
     
     
     # Tag-based statistics for the whole year
-    tag_stats = Activity.objects.filter(
+    activity_tag_stats = Activity.objects.filter(
         user=request.user, 
         start_time__date__gte=this_year
     ).values('activity_type') \
@@ -110,28 +111,35 @@ def dashboard_view(request):
          activity_count=Count('id')
      )
      
-    expenses_tag_stats = Expense.objects.filter(
+    expenses = Expense.objects.filter(
         user=request.user,
         year=date.today().year,
-    ).values('category') \
-     .annotate(
+    )
+    expenses_tag_stats = expenses.values('category') \
+        .annotate(
             total_amount=Sum('amount'),
             expenses_count=Count('id')
-     )
-    
-    if not expenses_tag_stats:
-        expenses_tag_stats = [{'category': 'No data', 'total_amount': 0, 'expense_count': 0}]
+        )
+
+    if not expenses.exists():
+        expenses_tag_stats = [{
+            'category': 'No data',
+            'total_amount': 0,
+            'expenses_count': 0,
+        }]
 
     daily_activities_chart = create_daily_activities_chart(request.user)
     activities_by_type_chart = create_activities_by_type_chart(request.user, period)
+    expenses_tree_chart = create_expenses_tree_chart(request.user)
     form = ActivityForm()
     
     context = {
         'today_activities': today_activities,
-        'tag_stats': tag_stats,
+        'activity_tag_stats': activity_tag_stats,
         'expenses_tag_stats': expenses_tag_stats,
         'daily_activities_chart': daily_activities_chart,
         'activities_by_type_chart': activities_by_type_chart,
+        'expenses_tree_chart': expenses_tree_chart,
         'form': form,
         'selected_period': period,
     }
@@ -147,7 +155,7 @@ def dashboard_day_view(request):
         start_time__date=today
     ).order_by('-start_time')
     
-    tag_stats = Activity.objects.filter(
+    activity_tag_stats = Activity.objects.filter(
         user=request.user, 
         start_time__date=today
     ).values('activity_type') \
@@ -160,7 +168,7 @@ def dashboard_day_view(request):
     form = ActivityForm()
     context = {
         'today_activities': today_activities,
-        'tag_stats': tag_stats,
+        'activity_tag_stats': activity_tag_stats,
         'day_activities_by_type_chart': chart_day,
         'form': form,
      }
@@ -177,7 +185,7 @@ def dashboard_week_view(request):
         start_time__date__gte=this_week
     ).order_by('-start_time')
     
-    tag_stats = Activity.objects.filter(
+    activity_tag_stats = Activity.objects.filter(
         user=request.user, 
         start_time__date__gte=this_week
     ).values('activity_type') \
@@ -189,7 +197,7 @@ def dashboard_week_view(request):
     form = ActivityForm()
     context = {
         'today_activities': today_activities,
-        'tag_stats': tag_stats,
+        'activity_tag_stats': activity_tag_stats,
         'week_activities_by_type_chart': chart_week,
         'form': form,
      }
@@ -206,7 +214,7 @@ def dashboard_month_view(request):
         start_time__date__gte=this_month
     ).order_by('-start_time')
     
-    tag_stats = Activity.objects.filter(
+    activity_tag_stats = Activity.objects.filter(
         user=request.user, 
         start_time__date__gte=this_month
     ).values('activity_type') \
@@ -219,7 +227,7 @@ def dashboard_month_view(request):
     form = ActivityForm()
     context = {
         'today_activities': today_activities,
-        'tag_stats': tag_stats,
+        'activity_tag_stats': activity_tag_stats,
         'month_activities_by_type_chart': chart_month,
         'form': form,
      }

@@ -161,3 +161,25 @@ def test_dashboard_view_context(client, user):
     assert response.context['today_activities'] is not None
     assert hasattr(response.context['form'], 'is_valid')
 
+@pytest.mark.django_db
+def test_dashboard_view_creates_activity_if_none_exists(client, user):
+    client.force_login(user)
+    response = client.get(reverse('dashboard'))
+    assert response.status_code == 200
+    assert user.activity_set.filter(name='Hello', activity_type='Daily visit').exists()
+    activity = user.activity_set.get(name='Hello', activity_type='Daily visit')
+    assert activity.description == "Thank you for visiting our site today"
+   
+@pytest.mark.django_db 
+def test_dashboard_view_creates_empty_expense_if_none_exists(client, user):
+    client.force_login(user)
+    response = client.get(reverse('dashboard'))
+    assert response.status_code == 200
+    assert user.expense_set.filter(category='No data', amount=0).exists()
+    expense = user.expense_set.get(category='No data', amount=0)
+    assert expense.description == "No expenses recorded for this year"
+
+@pytest.mark.django_db
+def test_dashboard_view_requires_login(client):
+    response = client.get(reverse('dashboard'))
+    assert response.status_code == 302  # Redirect to login

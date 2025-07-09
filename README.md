@@ -2,6 +2,23 @@
 
 Activity Tracker is a web application for tracking user activities and expenses. Built with Django, PostgreSQL, and containerized using Docker Compose.
 
+## 📸 Screenshots
+
+Here are some screenshots demonstrating the features of the Activity Tracker:
+
+### 1. Weekly Activity Summary
+
+![Weekly Activity Chart](docs/images/im1.png)
+
+### 2. Track Your Activities
+
+![Activity Table](docs/images/im2.png)
+
+### 3. New Feature: Expense Tracking
+
+![Add Activity Form](docs/images/im3.png)
+
+
 ## Prerequisites
 
 - Docker

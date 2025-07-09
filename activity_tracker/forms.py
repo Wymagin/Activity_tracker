@@ -20,8 +20,14 @@ class ActivityForm(forms.ModelForm):
         model = Activity
         fields = ['name', 'description', 'start_time', 'end_time', 'activity_type']
         widgets = {
-            'start_time': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
-            'end_time': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
+            'start_time': forms.DateTimeInput(
+                attrs={'type': 'datetime-local', 'class': 'form-control'},
+                format='%Y-%m-%dT%H:%M'  # <-- critical
+            ),
+            'end_time': forms.DateTimeInput(
+                attrs={'type': 'datetime-local', 'class': 'form-control'},
+                format='%Y-%m-%dT%H:%M'  # <-- critical
+            ),
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'activity_type': forms.Select(attrs={'class': 'form-select'}),
@@ -30,7 +36,6 @@ class ActivityForm(forms.ModelForm):
 class ExpenseInlineForm(forms.ModelForm):
     class Meta:
         model = Expense
-        # We don't need 'activity' or 'user' here. The view and formset will handle them.
         fields = ['amount', 'category', 'description', 'date']
         widgets = {
             'amount': forms.NumberInput(attrs={'step': '0.01', 'class': 'form-control'}),

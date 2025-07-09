@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegistrationForm, ActivityForm
+from .forms import UserRegistrationForm, ActivityForm, ExpenseInlineForm, ExpenseForm
 from django.utils import timezone
+from django.db import transaction
 from django.db.models import Sum, Count
 from .models import Activity, Expense
 from django.contrib.auth import authenticate, login, logout
@@ -9,7 +10,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from .utils import create_daily_activities_chart, create_activities_by_type_chart, create_demo_pie_chart, create_demo_bar_chart, create_demo_tree_chart
-from .utils import create_expenses_tree_chart
+from .utils import create_expenses_tree_chart, get_dashboard_forms
 from datetime import date
 
 # def base_view(request):
@@ -25,9 +26,8 @@ def home_view(request):
     demo_bar_chart_div = create_demo_bar_chart()
     demo_pie_chart_div = create_demo_pie_chart()
     demo_tree_chart_div = create_demo_tree_chart()
-    form = ActivityForm()
     context = {
-    'form': form,
+    **get_dashboard_forms(),
     'demo_bar_chart_div': demo_bar_chart_div,
     'demo_pie_chart_div': demo_pie_chart_div,
     'demo_tree_chart_div': demo_tree_chart_div,
@@ -64,15 +64,34 @@ def logout_view(request):
 @login_required
 def add_activity(request):
     if request.method == 'POST':
-        form = ActivityForm(request.POST)
-        if form.is_valid():
-            activity = form.save(commit=False)
-            activity.user = request.user  
-            activity.save()
+        activity_form = ActivityForm(request.POST)
+        expense_form = ExpenseInlineForm(request.POST)
+        next_url = request.POST.get('next') or 'dashboard'
+        if activity_form.is_valid():
+            with transaction.atomic():
+                activity = activity_form.save(commit=False)
+                activity.user = request.user  
+                activity.save()
+                
+                if request.POST.get("add_expense"):
+                    if expense_form.has_changed() and expense_form.is_valid():
+                        expense = expense_form.save(commit=False)
+                        expense.user = request.user
+                        expense.activity = activity
+                        expense.save()
+                    elif expense_form.has_changed():
+                        messages.error(request, "There was an error in your expense form.")
+                        request.session['open_modal'] = True
+                        return redirect(next_url)
+                    
             messages.success(request, "Activity added successfully!")
+            return redirect(next_url)
         else:
             messages.error(request, "There was an error in your form. Please fix it and try again.")
-    return redirect('dashboard') 
+            return redirect(next_url)
+    
+    return redirect('dashboard')
+    
 
 @login_required
 def dashboard_view(request):
@@ -131,7 +150,7 @@ def dashboard_view(request):
     daily_activities_chart = create_daily_activities_chart(request.user)
     activities_by_type_chart = create_activities_by_type_chart(request.user, period)
     expenses_tree_chart = create_expenses_tree_chart(request.user)
-    form = ActivityForm()
+
     
     context = {
         'today_activities': today_activities,
@@ -140,8 +159,8 @@ def dashboard_view(request):
         'daily_activities_chart': daily_activities_chart,
         'activities_by_type_chart': activities_by_type_chart,
         'expenses_tree_chart': expenses_tree_chart,
-        'form': form,
         'selected_period': period,
+        **get_dashboard_forms(),
     }
     
     return render(request, 'activity_tracker/dashboard.html', context)
@@ -165,12 +184,11 @@ def dashboard_day_view(request):
      )
      
     chart_day = create_activities_by_type_chart(request.user, 'day')
-    form = ActivityForm()
     context = {
         'today_activities': today_activities,
         'activity_tag_stats': activity_tag_stats,
         'day_activities_by_type_chart': chart_day,
-        'form': form,
+        **get_dashboard_forms(),
      }
     
     return render(request, 'activity_tracker/dashboard_day.html', context)
@@ -194,12 +212,11 @@ def dashboard_week_view(request):
          activity_count=Count('id')
      )
     chart_week = create_activities_by_type_chart(request.user, 'week')
-    form = ActivityForm()
     context = {
         'today_activities': today_activities,
         'activity_tag_stats': activity_tag_stats,
         'week_activities_by_type_chart': chart_week,
-        'form': form,
+        **get_dashboard_forms(),
      }
     
     return render(request, 'activity_tracker/dashboard_week.html', context)
@@ -224,12 +241,11 @@ def dashboard_month_view(request):
      )
     
     chart_month = create_activities_by_type_chart(request.user, 'month')
-    form = ActivityForm()
     context = {
         'today_activities': today_activities,
         'activity_tag_stats': activity_tag_stats,
         'month_activities_by_type_chart': chart_month,
-        'form': form,
+        **get_dashboard_forms(),
      }
     
     return render(request, 'activity_tracker/dashboard_month.html', context)

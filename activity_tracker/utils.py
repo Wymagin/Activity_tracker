@@ -6,7 +6,7 @@ import pandas as pd
 from django.db.models import Count, Sum, DurationField
 from django.db.models.functions import TruncDate, TruncDay, TruncWeek, TruncMonth, TruncYear
 from .models import Activity, Expense
-
+from .forms import ActivityForm, ExpenseInlineForm
 
 def aggregate_daily_activities(user):
     daily_activities = Activity.objects.filter(user=user).annotate(
@@ -191,3 +191,9 @@ def create_demo_tree_chart():
     )
 
     return opy.plot(fig, output_type='div', include_plotlyjs=True)
+
+def get_dashboard_forms():
+    return {
+        'activity_form': ActivityForm(),
+        'expenses_form': ExpenseInlineForm(),
+    }

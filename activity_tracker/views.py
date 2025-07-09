@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegistrationForm, ActivityForm
+from .forms import UserRegistrationForm, ActivityForm, ExpenseInlineForm, ExpenseForm
 from django.utils import timezone
+from django.db import transaction
 from django.db.models import Sum, Count
 from .models import Activity, Expense
 from django.contrib.auth import authenticate, login, logout
@@ -64,11 +65,19 @@ def logout_view(request):
 @login_required
 def add_activity(request):
     if request.method == 'POST':
-        form = ActivityForm(request.POST)
-        if form.is_valid():
-            activity = form.save(commit=False)
-            activity.user = request.user  
-            activity.save()
+        activity_form = ActivityForm(request.POST)
+        expenseinline_form = ExpenseInlineForm(request.POST)
+        if activity_form.is_valid():
+            with transaction.atomic():
+                activity = activity_form.save(commit=False)
+                activity.user = request.user  
+                activity.save()
+                if expenseinline_form.is_valid():
+                    expense = expenseinline_form.save(commit=False)
+                    expense.user = request.user
+                    expense.activity = activity
+                    expense.year = activity.start_time.year if hasattr(activity, 'start_time') else timezone.now().year
+                    expense.save()
             messages.success(request, "Activity added successfully!")
         else:
             messages.error(request, "There was an error in your form. Please fix it and try again.")

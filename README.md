@@ -63,7 +63,7 @@ The application will be available at http://localhost:8000.
 To apply database migrations, run:
 
 ```bash
-docker compose run web python manage.py migrate
+docker compose exec web python manage.py migrate
 ```
 
 ### Creating a Superuser
@@ -71,7 +71,7 @@ docker compose run web python manage.py migrate
 To create a superuser for accessing the Django admin, run:
 
 ```bash
-docker compose run web python manage.py createsuperuser
+docker compose exec web python manage.py createsuperuser
 ```
 ### Stopping the Application
 

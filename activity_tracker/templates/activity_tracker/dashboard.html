@@ -23,14 +23,16 @@
   <div class="row"> 
     <div class="col-md-4 pt-3">
       <h2><span class="badge bg-warning">Activity Statistics</span></h2>
-      <ul class="list-group">
+      <ul class="list-group" style="width: 100%;">
         {% for tag_stat in activity_tag_stats %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <span class="flex-grow-1"><button type="button" class="btn btn-success"style="min-width: 100px;">{{ tag_stat.activity_type }} </button></span>
-          <span class="badge bg-primary d-flex justify-content-center align-items-center" style="min-width: 100px;">
+        <li class="list-group-item d-flex justify-content-between align-items-center" style="width: 100%;">
+          <span class="flex-grow-1" style="min-width: 180px; max-width: 220px; overflow: hidden; text-overflow: ellipsis;">
+            <button type="button" class="btn btn-success" style="width: 140px;">{{ tag_stat.activity_type }}</button>
+          </span>
+          <span class="badge bg-primary d-flex justify-content-center align-items-center" style="width: 140px;">
             {{ tag_stat.activity_count }} activities
           </span>
-          <span class="badge bg-secondary"style="min-width: 80px;">
+          <span class="badge bg-secondary" style="width: 120px;">
             {{ tag_stat.total_duration }}
           </span>
         </li>
@@ -39,18 +41,20 @@
     </div>
     <div class="col-md-4 pt-3">
       <h2><span class="badge bg-warning">Expenses Statistics</span></h2>
-      <ul class="list-group">
-        {% for expenses_tag_stat in expenses_tag_stats %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <span class="flex-grow-1"><button type="button" class="btn btn-success"style="min-width: 100px;">{{ expenses_tag_stat.category }} </button></span>
-          <span class="badge bg-primary d-flex justify-content-center align-items-center" style="min-width: 100px;">
-            {{ expenses_tag_stat.expenses_count }} expenses
-          </span>
-          <span class="badge bg-secondary"style="min-width: 80px;">
-            {{ expenses_tag_stat.total_amount }}
-          </span>
-        </li>
-        {% endfor %}
+      <ul class="list-group" style="width: 100%;">
+      {% for expenses_tag_stat in expenses_tag_stats %}
+      <li class="list-group-item d-flex justify-content-between align-items-center" style="width: 100%;">
+      <span class="flex-grow-1" style="min-width: 180px; max-width: 220px; overflow: hidden; text-overflow: ellipsis;">
+        <button type="button" class="btn btn-success" style="width: 140px;">{{ expenses_tag_stat.category }}</button>
+      </span>
+      <span class="badge bg-primary d-flex justify-content-center align-items-center" style="width: 140px;">
+        {{ expenses_tag_stat.expenses_count }} expenses
+      </span>
+      <span class="badge bg-secondary" style="width: 120px;">
+        {{ expenses_tag_stat.total_amount }}
+      </span>
+      </li>
+      {% endfor %}
       </ul>
     </div>
 

@@ -36,7 +36,7 @@ cd Activity_tracker
 ### Copy the example environment file:
 
 ```bash
-cp .env.example .env"
+cp .env.example .env
 ```
 ### Edit .env and fill in your own values:
 

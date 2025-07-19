@@ -33,19 +33,22 @@ Here are some screenshots demonstrating the features of the Activity Tracker:
 git clone https://github.com/Wymagin/Activity_tracker.git
 cd Activity_tracker
 ```
-### Generate a Django Secret Key
+### Copy the example environment file:
 
-Before running the application, ensure that you have a unique secret key set in your settings.py file. You can generate a secret key using the following Python script:
+```bash
+cp .env.example .env
+```
+### Edit .env and fill in your own values:
+
+Generate a Django secret key (optional helper):
 
 ```bash
 python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
 
-Once generated, set the SECRET_KEY environment variable or update the settings.py file directly:
+Open .env in your editor and set the SECRET_KEY and other variables as needed.
 
-```bash
-SECRET_KEY = 'your-generated-secret-key'
-```
+
 
 ## Build and Run the Application
 
@@ -60,7 +63,7 @@ The application will be available at http://localhost:8000.
 To apply database migrations, run:
 
 ```bash
-docker compose run web python manage.py migrate
+docker compose exec web python manage.py migrate
 ```
 
 ### Creating a Superuser
@@ -68,7 +71,7 @@ docker compose run web python manage.py migrate
 To create a superuser for accessing the Django admin, run:
 
 ```bash
-docker compose run web python manage.py createsuperuser
+docker compose exec web python manage.py createsuperuser
 ```
 ### Stopping the Application
 
@@ -84,6 +87,7 @@ Activity_tracker/
 ├── activity_tracker/   # Main Django project
 ├── Dockerfile          # Dockerfile for the web service
 ├── docker-compose.yml  # Docker Compose configuration
+├── .env.example
 ├── README.md           # Project documentation
 └── requirements.txt    # Python dependencies
 ```
